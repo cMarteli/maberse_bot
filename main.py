@@ -13,7 +13,7 @@ TOKEN = os.environ['BOT_TOKEN'] #secret token is stored in replit
 
 GREET_CHANNEL_ID = 432542755785408515 # this is the id of the "generalis" channel
 
-
+#allows bot to send messages
 async def send_message(message, user_message, is_private):
   try:
     response = responses.handle_response(user_message)
@@ -29,19 +29,19 @@ def run_discord_bot():
   intents = discord.Intents.all()
   intents.members = True
   client = discord.Client(intents=intents)
-
+#event that triggers when a new person joins the server
   @client.event
   async def on_member_join(member):
     # Greets a new member joining the server
     channel = client.get_channel(GREET_CHANNEL_ID)
     # Replace the message content as desired
-    message = "Howdy, howdy!"
+    message = "Howdy, howdy!" #@TODO this should be a static string at the top
     await channel.send(f"{message} {member.mention}")
-
+#debug event, lets you know when bot is launched successfully
   @client.event
   async def on_ready():
     print(f'{client.user} is now running!')
-
+#event to let the bot read user messages on channel so it can reply if appropiate
   @client.event
   async def on_message(message):
     if message.author == client.user:
@@ -52,7 +52,7 @@ def run_discord_bot():
     channel = str(message.channel)
 
     print(f"{username} said: '{user_message}' ({channel})")
-
+#if a user message starts with ? the bot will send it's reply as a DM
     if user_message.startswith('?'):
       user_message = user_message[1:]
       await send_message(message, user_message, is_private=True)
@@ -62,7 +62,7 @@ def run_discord_bot():
   client.run(TOKEN)
 
 
-#Bottom of Main.py
+#used to keep bot alive on repl
 
 keep_alive()
 
