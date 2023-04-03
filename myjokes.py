@@ -1,3 +1,5 @@
+#holds joke arrays and joke return function
+
 import random
 
 jokes = [
@@ -14,20 +16,23 @@ jokes = [
   "What's the difference between a Scotsman and a Rolling Stone? A Rolling Stone says, \"hey you, get off of my cloud!\" while a Scotsman says, \"Hey McLeod, get off of my ewe!\""
 ]
 
+#jokes here only have a small chance to be returned
 rare_jokes = [
   "Did you know that black people are just regular people with night mode on?",
   "Did you know that dolphis use puffer fish to get high and commit r***? Well can you guess what a land dolphin is?",
   "Why do jews have big noses? Because air is free!"
 ]
 
+#keeps track of last 3 jokes so the bot doesn't repeat the same joke
 last_three_jokes = []
 
 
+#returns a joke string
 def tell_joke():
   available_jokes = [joke for joke in jokes if joke not in last_three_jokes]
   if len(available_jokes) == 0:
     available_jokes = jokes
-  if random.randint(1, 50) == 1 and len(rare_jokes) > 0:
+  if random.randint(1, 50) == 1 and len(rare_jokes) > 0: #change rand int values here for random joke chance
     joke = random.choice(rare_jokes)
   else:
     joke = random.choice(available_jokes)
