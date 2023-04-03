@@ -15,3 +15,8 @@ Commands:
 !roll d20 , !roll d10 - rolls a d20 and d10 respectively type !roll*x dXX for multiple dice
 
 #Inserting a ? in front any message with a command will tell the bot to send a private message to the user instead of replying on the channel.
+
+
+
+# link to repl hosting the bot currently:
+https://replit.com/@cMarteli/Maberse-Bot
