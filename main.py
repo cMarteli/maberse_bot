@@ -10,6 +10,7 @@ import discord
 import responses
 
 TOKEN = os.environ['BOT_TOKEN'] #secret token is stored in replit
+WELCOME_MESSAGE = "Howdy, howdy!" #message that will be displayed when a new user joins server
 
 GREET_CHANNEL_ID = 432542755785408515 # this is the id of the "generalis" channel
 
@@ -34,9 +35,7 @@ def run_discord_bot():
   async def on_member_join(member):
     # Greets a new member joining the server
     channel = client.get_channel(GREET_CHANNEL_ID)
-    # Replace the message content as desired
-    message = "Howdy, howdy!" #@TODO this should be a static string at the top
-    await channel.send(f"{message} {member.mention}")
+    await channel.send(f"{WELCOME_MESSAGE} {member.mention}")
 #debug event, lets you know when bot is launched successfully
   @client.event
   async def on_ready():
