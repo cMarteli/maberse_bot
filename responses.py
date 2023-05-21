@@ -1,14 +1,15 @@
-#responses.py
+# responses.py
 import random
+import asyncio
 import myjokes
 
 
-#rolls a die maxVal is the number of sides
+# Rolls a die with maxVal sides
 def diceRoll(maxVal):
   return str(random.randint(1, maxVal))
 
 
-def handle_response(message) -> str:
+async def handle_response(message) -> str:
   p_message = message.lower()
 
   if p_message.startswith('!roll'):
@@ -25,25 +26,23 @@ def handle_response(message) -> str:
       else:
         dice_type = roll_string.strip()
 
-    # check which dice to roll
+    # Check which dice to roll
     if 'd10' in dice_type:
-      rolls = [diceRoll(10) for i in range(num_rolls)]
+      rolls = [diceRoll(10) for _ in range(num_rolls)]
       return ', '.join(str(r) for r in rolls)
     elif 'd20' in dice_type:
-      rolls = [diceRoll(20) for i in range(num_rolls)]
+      rolls = [diceRoll(20) for _ in range(num_rolls)]
       return ', '.join(str(r) for r in rolls)
     else:
-      rolls = [diceRoll(6) for i in range(num_rolls)]
+      rolls = [diceRoll(6) for _ in range(num_rolls)]
       return ', '.join(str(r) for r in rolls)
 
   if 'how are you' in p_message:
-    return "I'm good thanks for asking!"
+    return "I'm good, thanks for asking!"
 
   if 'joke' in p_message:
-    joke = myjokes.tell_joke()
-    return str("Sure mate, here's a good one:\n" + joke)
+    joke = await myjokes.tell_joke()
+    return "Sure mate, here's a good one:\n" + joke
 
   if 'legal advice' in p_message:
-    return str(
-      "Sorry, I'm not programmed to give legal advice, mate. Please check with Maberse (real)"
-    )
+    return "Sorry, I'm not programmed to give legal advice. Please consult Maberse(Real)."
