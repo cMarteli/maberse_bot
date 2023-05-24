@@ -40,7 +40,7 @@ async def handle_response(message) -> str:
   if 'how are you' in p_message:
     return "I'm good, thanks for asking!"
 
-  if 'thanks' and 'mark' in p_message:
+  if 'thanks mark' in p_message:
     return "That's okay, always happy to help out a mate!"
 
   if 'joke' in p_message:
