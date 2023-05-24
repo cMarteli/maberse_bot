@@ -9,7 +9,15 @@ The ultimate bot in terms of attack and defense.
 
 --how are you? #answers with "I'm good thanks for asking!"
 
---joke #Pulls from a joke array
+# Jokes:
+Just say the word 'joke' in a sentence.
+Uses jokeapi
+https://github.com/leet-hakker/JokeAPI-Python
+
+# Weather
+Just say the word 'weather' the bot will know what you want.
+Uses python-weather
+https://github.com/null8626/python-weather
 
 # Dice rolls
 !roll - rolls a die
