@@ -1,15 +1,15 @@
-# maberse_bot
-A simple discord bot written in Python.
+# Description
+Maberse_bot is a simple discord bot written in Python.
 The ultimate bot in terms of attack and defense.
 
-# Commands:
+# Commands
 **the first two commands only need to be included in the message string.
 **All commands are case insensitive
 **Inserting a ? in front any message with a command will tell the bot to send a private message to the user instead of replying on the channel.
 
 --how are you? #answers with "I'm good thanks for asking!"
 
-# Jokes:
+# Jokes
 Just say the word 'joke' in a sentence.
 Uses jokeapi
 https://github.com/leet-hakker/JokeAPI-Python
