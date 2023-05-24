@@ -1,5 +1,5 @@
 # Markus Bot
-# Version 0.02
+# Version 0.10
 # Author: Glitch
 # Modified March, 29, 2023
 
@@ -17,7 +17,7 @@ GREET_CHANNEL_ID = 432542755785408515 # this is the id of the "generalis" channe
 #allows bot to send messages
 async def send_message(message, user_message, is_private):
   try:
-    response = responses.handle_response(user_message)
+    response = await responses.handle_response(user_message)
     await message.author.send(
       response) if is_private else await message.channel.send(response)
 
