@@ -1,8 +1,9 @@
 # maberse_bot
-The ultimate Mark in terms of attack and defense.
+A simple discord bot written in Python.
+The ultimate bot in terms of attack and defense.
 
 # Commands:
-**the first two commands only need to be included in the message string. 
+**the first two commands only need to be included in the message string.
 **All commands are case insensitive
 **Inserting a ? in front any message with a command will tell the bot to send a private message to the user instead of replying on the channel.
 
