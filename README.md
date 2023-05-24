@@ -12,11 +12,15 @@ The ultimate bot in terms of attack and defense.
 # Jokes
 Just say the word 'joke' in a sentence.
 Uses jokeapi
+
+
 https://github.com/leet-hakker/JokeAPI-Python
 
 # Weather
 Just say the word 'weather' the bot will know what you want.
 Uses python-weather
+
+
 https://github.com/null8626/python-weather
 
 # Dice rolls
