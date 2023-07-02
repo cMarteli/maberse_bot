@@ -46,14 +46,14 @@ async def handle_response(message) -> str:
   if 'thanks mark' in p_message:
     return "That's okay, always happy to help out a mate!"
 
-  if p_message.startswith('!joke') or 'joke' in p_message:
+  if '!joke' or 'joke' in p_message:
     joke = await myjokes.tell_joke()
     return "Sure mate, here's a good one:\n" + joke
 
-  if p_message.startswith('!legal') or 'legal advice' in p_message:
+  if '!legal' or 'legal advice' in p_message:
     return "Sorry, I'm not programmed to give legal advice. Please consult Maberse(Real)."
 
-  if p_message.startswith('!weather') or 'weather' in p_message:
+  if '!weather' or 'weather' in p_message:
     temperature = await weather.getweather()
     place = weather.getLocation()
     return "It's currently " + str(
