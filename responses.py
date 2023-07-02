@@ -13,7 +13,7 @@ async def handle_response(message) -> str:
   p_message = message.lower()
 
   if p_message.startswith('!help'):
-    return "Hey mate, I'm Maberse (Bot). I can roll dice, tell jokes, and tell you the weather. Try typing !roll 2d10 to roll two 10-sided dice, type \'joke\' to hear a joke. If you want to know the weather, just ask me!"
+    return "Hey mate, I'm Maberse (Bot). I can roll dice, tell jokes, and tell you the weather. Try typing !roll 2*d10 to roll two 10-sided dice, type \'joke\' to hear a joke. If you want to know the weather, just ask me!"
 
   if p_message.startswith('!roll'):
     _, roll_string = p_message.split(' ', 1)
