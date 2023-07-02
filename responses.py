@@ -13,7 +13,7 @@ async def handle_response(message) -> str:
   p_message = message.lower()
 
   if p_message.startswith('!help'):
-    return "Hey mate, I'm Mark Bot. I'm a bot that can do a few things. I can roll dice, tell jokes, and tell you the weather. Try typing !roll 2d10 to roll two 10-sided dice, or !joke to hear a joke. If you want to know the weather, just ask me!"
+    return "Hey mate, I'm Maberse (Bot). I can roll dice, tell jokes, and tell you the weather. Try typing !roll 2d10 to roll two 10-sided dice, type \'joke\' to hear a joke. If you want to know the weather, just ask me!"
 
   if p_message.startswith('!roll'):
     _, roll_string = p_message.split(' ', 1)
@@ -46,14 +46,14 @@ async def handle_response(message) -> str:
   if 'thanks mark' in p_message:
     return "That's okay, always happy to help out a mate!"
 
-  if '!joke' or 'joke' in p_message:
+  if 'joke' in p_message:
     joke = await myjokes.tell_joke()
     return "Sure mate, here's a good one:\n" + joke
 
-  if '!legal' or 'legal advice' in p_message:
+  if 'legal advice' in p_message:
     return "Sorry, I'm not programmed to give legal advice. Please consult Maberse(Real)."
 
-  if '!weather' or 'weather' in p_message:
+  if 'weather' in p_message:
     temperature = await weather.getweather()
     place = weather.getLocation()
     return "It's currently " + str(
