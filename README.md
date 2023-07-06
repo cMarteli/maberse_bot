@@ -25,8 +25,8 @@ https://github.com/null8626/python-weather
 
 # Dice rolls
 !roll - rolls a die
-!roll*x - rolls x number of dice eg. !roll*3
-!roll d20 , !roll d10 - rolls a d20 and d10 respectively type !roll*x dXX for multiple dice
+!roll\*x - rolls x number of dice eg. !roll\*3
+!roll d20 , !roll d10 - rolls a d20 and d10 respectively type !roll\*x dXX for multiple dice
 
 
 
