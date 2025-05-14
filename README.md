@@ -1,3 +1,7 @@
+# QUICK SETUP
+Set up a venv and install dependencies from requirements.txt
+python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt
+
 # Description
 Maberse_bot is a simple discord bot written in Python.
 The ultimate bot in terms of attack and defense.

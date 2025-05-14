@@ -1,5 +1,5 @@
 # Markus Bot
-# Version 0.10
+# Version 0.11
 # Author: Glitch
 # Modified March, 29, 2023
 
@@ -14,8 +14,6 @@ load_dotenv()  # Load environment variables from .env
 
 TOKEN = os.getenv('BOT_TOKEN')
 
-# TOKEN = os.environ['BOT_TOKEN'] #secret token is stored in replit
-# message that will be displayed when a new user joins server
 WELCOME_MESSAGE = "Howdy, howdy!"
 
 # this is the id of the "generalis" channel
@@ -65,7 +63,7 @@ def run_discord_bot():
         channel = str(message.channel)
 
         print(f"{username} said: '{user_message}' ({channel})")
-# if a user message starts with ? the bot will send it's reply as a DM
+# if a user message starts with ? the bot will send its reply as a DM
         if user_message.startswith('?'):
             user_message = user_message[1:]
             await send_message(message, user_message, is_private=True)
