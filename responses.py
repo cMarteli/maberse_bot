@@ -1,4 +1,5 @@
 # responses.py
+from yt_search import join_and_play
 import random
 import weather
 import myjokes
@@ -9,36 +10,38 @@ def diceRoll(maxVal):
     return str(random.randint(1, maxVal))
 
 
-async def handle_response(message) -> str:
-    p_message = message.lower()
+async def handle_response(message) -> str | None:
+    p_message = message.content.lower().strip()
 
     if p_message.startswith('!help'):
-        return "Hey mate, I'm Maberse (Bot). I can roll dice, tell jokes, and tell you the weather. Try typing !roll 2*d10 to roll two 10-sided dice, type \'joke\' to hear a joke. If you want to know the weather, just ask me!"
+        return (
+            "Hey mate, I'm Maberse (Bot). I can roll dice, tell jokes, and tell you the weather.\n"
+            "Try typing `!roll 2*d10` to roll two 10-sided dice, `joke` to hear a joke.\n"
+            "If you want to know the weather, just ask me!\n"
+            "You can also `!play <YouTube search>` to play music in your voice channel."
+        )
 
     if p_message.startswith('!roll'):
-        _, roll_string = p_message.split(' ', 1)
+        try:
+            _, roll_string = p_message.split(' ', 1)
+        except ValueError:
+            roll_string = ''
+
         if '*' in roll_string:
-            # Split the roll string by the * symbol to get the number of rolls and the type of dice
             num_rolls, dice_type = roll_string.split('*')
             num_rolls = int(num_rolls.strip())
         else:
-            # If no dice type is specified, assume d6
             num_rolls = 1
-            if len(roll_string.strip()) == 0:
-                dice_type = 'd6'
-            else:
-                dice_type = roll_string.strip()
+            dice_type = roll_string.strip() if roll_string.strip() else 'd6'
 
-        # Check which dice to roll
+        sides = 6
         if 'd10' in dice_type:
-            rolls = [diceRoll(10) for _ in range(num_rolls)]
-            return ', '.join(str(r) for r in rolls)
+            sides = 10
         elif 'd20' in dice_type:
-            rolls = [diceRoll(20) for _ in range(num_rolls)]
-            return ', '.join(str(r) for r in rolls)
-        else:
-            rolls = [diceRoll(6) for _ in range(num_rolls)]
-            return ', '.join(str(r) for r in rolls)
+            sides = 20
+
+        rolls = [diceRoll(sides) for _ in range(num_rolls)]
+        return ', '.join(rolls)
 
     if 'how are you' in p_message:
         return "I'm good, thanks for asking!"
@@ -48,7 +51,7 @@ async def handle_response(message) -> str:
 
     if 'joke' in p_message:
         joke = await myjokes.tell_joke()
-        return "Yeah, I know a joke actually: \n" + joke
+        return f"Yeah, I know a joke actually:\n{joke}"
 
     if 'legal advice' in p_message:
         return "Sorry, I'm not programmed to give legal advice. Please consult Maberse(Real)."
@@ -56,5 +59,19 @@ async def handle_response(message) -> str:
     if 'weather' in p_message:
         temperature = await weather.getweather()
         place = weather.getLocation()
-        return "It's currently " + str(
-            temperature) + " degrees in " + place + ", mate."
+        return f"It's currently {temperature} degrees in {place}, mate."
+
+    if p_message.startswith("!play "):
+        query = p_message[6:].strip()
+        await join_and_play(message, query)
+        return None  # Audio action, no text reply
+
+    if p_message.startswith("!leave"):
+        voice_client = message.guild.voice_client
+        if voice_client and voice_client.is_connected():
+            await voice_client.disconnect()
+            return "I'm off, you lads have a good night."
+    else:
+        return "I'm not connected to any voice channel."
+
+    return "Not sure about that one, sorry."
