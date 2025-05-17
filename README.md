@@ -1,44 +1,24 @@
-# QUICK SETUP
-Set up a venv and install dependencies from requirements.txt
-python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt
+# 🎲 Maberse Bot
 
+**The ultimate bot in terms of attack and defense.**
+
+Maberse is a lightweight, Python-based Discord bot built for fun and utility — including music playback, dice rolling, weather updates, jokes, and more.
+
+---
+
+## 🚀 Quick Setup
+
+```bash
+# Create virtual environment and install core dependencies
+python3 -m venv venv && source venv/bin/activate
+pip install -r requirements.txt
+
+# Ensure latest versions of core modules
 pip install -U yt-dlp
 pip install -U "discord.py[voice]"
 
+# Add your Discord bot token to a .env file:
+BOT_TOKEN=your_bot_token_here
 
-# Description
-Maberse_bot is a simple discord bot written in Python.
-The ultimate bot in terms of attack and defense.
-
-# Commands
-**the first two commands only need to be included in the message string.
-**All commands are case insensitive
-**Inserting a ? in front any message with a command will tell the bot to send a private message to the user instead of replying on the channel.
-
---how are you? #answers with "I'm good thanks for asking!"
-
-# Jokes
-Just say the word 'joke' in a sentence.
-Uses jokeapi
-
-
-https://github.com/leet-hakker/JokeAPI-Python
-
-# Weather
-Just say the word 'weather' the bot will know what you want.
-Uses python-weather
-
-
-https://github.com/null8626/python-weather
-
-# Dice rolls
-!roll - rolls a die
-!roll\*x - rolls x number of dice eg. !roll\*3
-!roll d20 , !roll d10 - rolls a d20 and d10 respectively type !roll\*x dXX for multiple dice
-
-
-
-
-
-# link to repl hosting the bot currently:
-https://replit.com/@cMarteli/Maberse-Bot
+# Then run:
+python3 main.py
