@@ -66,7 +66,7 @@ async def handle_response(message) -> str | None:
         await join_and_play(message, query)
         return None  # Audio action, no text reply
 
-    if p_message.startswith("!leave"):
+    if p_message.startswith("!leave" or "!stop"):
         voice_client = message.guild.voice_client
         if voice_client and voice_client.is_connected():
             await voice_client.disconnect()
