@@ -49,16 +49,12 @@ async def join_and_play(message, query):
             return
 
     queue = get_queue(guild_id)
-    was_queue_empty = not get_queue(guild_id)
     is_playing = vc.is_playing()
     queue.append((title, audio_url))
 
-    # Show "Queued" message only if something is already playing
     if is_playing:
         await message.channel.send(f"Queued: **{title}**")
-
-    # If nothing is playing, start playback
-    if not is_playing:
+    else:
         await play_next(message.guild, message.channel)
 
 
@@ -70,7 +66,13 @@ async def play_next(guild, text_channel):
     queue = get_queue(guild.id)
     vc: discord.VoiceClient = guild.voice_client
 
-    if not queue or not vc:
+    if not vc:
+        return
+
+    if not queue:
+        await asyncio.sleep(2)  # Grace period before disconnecting
+        if not get_queue(guild.id) and not vc.is_playing():
+            await vc.disconnect()
         return
 
     title, audio_url = queue.pop(0)
@@ -81,22 +83,25 @@ async def play_next(guild, text_channel):
             print(f"Playback error: {err}")
         try:
             future = asyncio.run_coroutine_threadsafe(
-                play_next(guild, text_channel), main_loop)
+                play_next(guild, text_channel), main_loop
+            )
             future.result()
         except Exception as e:
             print(f"Error in after_playing: {e}")
 
-    vc.play(discord.FFmpegPCMAudio(audio_url, **FFMPEG_OPTIONS),
-            after=after_playing)
+    vc.play(discord.FFmpegPCMAudio(audio_url, **
+            FFMPEG_OPTIONS), after=after_playing)
 
 
 def clear_queue(guild_id):
     song_queues.pop(guild_id, None)
 
 
-def skip_song(guild):
+async def skip_song(guild):
     vc: discord.VoiceClient = guild.voice_client
     if vc and vc.is_playing():
-        vc.stop()
+        vc.stop()  # Triggers after_playing, which handles disconnection
         return True
+    elif vc and not vc.is_playing() and not get_queue(guild.id):
+        await vc.disconnect()
     return False
