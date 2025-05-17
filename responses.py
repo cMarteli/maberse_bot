@@ -73,10 +73,14 @@ async def handle_response(message) -> str | None:
             return "I'm off, you lads have a good night."
 
     if p_message.startswith("!skip"):
-        if skip_song(message.guild):
+        voice_client = message.guild.voice_client
+        if await skip_song(message.guild):
             return "Sorry mate, let me skip that one."
-        else:
+        elif voice_client and voice_client.is_connected():
+            clear_queue(message.guild.id)
             await voice_client.disconnect()
-            return "There's nothing playing to skip."
+            return "There's nothing playing to skip. I'm off."
+        else:
+            return "I'm not even in a voice channel, mate."
 
     return "Not sure about that one, sorry."
