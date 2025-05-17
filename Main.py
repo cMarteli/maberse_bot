@@ -4,11 +4,12 @@
 # Modified March, 29, 2023
 
 from dotenv import load_dotenv
-from webserver import keep_alive  # needed for replit hosting
+# TODO; check if still needed to keep server from timing out
+from WebServer import keep_alive
 
 import os
 import discord
-import responses
+import Responses
 
 load_dotenv()  # Load environment variables from .env
 
@@ -21,7 +22,7 @@ GREET_CHANNEL_ID = 432542755785408515  # "generalis" channel
 
 async def send_message(message):
     try:
-        response = await responses.handle_response(message)
+        response = await Responses.handle_response(message)
         if response is not None:
             await message.channel.send(response)
     except Exception as e:

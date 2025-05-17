@@ -1,12 +1,11 @@
 # responses.py
-from player import join_and_play, skip_song, clear_queue
-import random
-import weather
-import myjokes
+from Player import join_and_play, skip_song, clear_queue
+from DiceRoll import DiceRoller
+import Weather
+import MyJokes
 
 
-def dice_roll(sides: int) -> str:
-    return str(random.randint(1, sides))
+roller = DiceRoller()
 
 
 async def handle_response(message) -> str | None:
@@ -24,23 +23,8 @@ async def handle_response(message) -> str | None:
         try:
             _, roll_string = p_message.split(' ', 1)
         except ValueError:
-            roll_string = ''
-
-        if '*' in roll_string:
-            num_rolls, dice_type = roll_string.split('*')
-            num_rolls = int(num_rolls.strip())
-        else:
-            num_rolls = 1
-            dice_type = roll_string.strip() if roll_string.strip() else 'd6'
-
-        sides = 6
-        if 'd10' in dice_type:
-            sides = 10
-        elif 'd20' in dice_type:
-            sides = 20
-
-        rolls = [dice_roll(sides) for _ in range(num_rolls)]
-        return ', '.join(rolls)
+            roll_string = 'd6'  # default fallback
+        return roller.roll(roll_string)
 
     if 'how are you' in p_message and not p_message.startswith('!'):
         return "I'm good, thanks for asking!"
@@ -49,15 +33,15 @@ async def handle_response(message) -> str | None:
         return "That's okay, always happy to help out a mate!"
 
     if 'joke' in p_message and not p_message.startswith('!'):
-        joke = await myjokes.tell_joke()
+        joke = await MyJokes.tell_joke()
         return f"Yeah, I know a joke actually:\n{joke}"
 
     if 'legal advice' in p_message and not p_message.startswith('!'):
         return "Sorry, I'm not programmed to give legal advice. Please consult Maberse(Real)."
 
     if 'weather' in p_message:
-        temperature = await weather.getweather()
-        place = weather.getLocation()
+        temperature = await Weather.getweather()
+        place = Weather.getLocation()
         return f"It's currently {temperature} degrees in {place}, mate."
 
     if p_message.startswith("!play "):
