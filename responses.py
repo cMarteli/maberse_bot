@@ -1,13 +1,12 @@
 # responses.py
-from yt_search import join_and_play
+from player import join_and_play, skip_song, clear_queue
 import random
 import weather
 import myjokes
 
 
-# Rolls a die with maxVal sides
-def diceRoll(maxVal):
-    return str(random.randint(1, maxVal))
+def dice_roll(sides: int) -> str:
+    return str(random.randint(1, sides))
 
 
 async def handle_response(message) -> str | None:
@@ -40,20 +39,20 @@ async def handle_response(message) -> str | None:
         elif 'd20' in dice_type:
             sides = 20
 
-        rolls = [diceRoll(sides) for _ in range(num_rolls)]
+        rolls = [dice_roll(sides) for _ in range(num_rolls)]
         return ', '.join(rolls)
 
-    if 'how are you' in p_message:
+    if 'how are you' in p_message and not p_message.startswith('!'):
         return "I'm good, thanks for asking!"
 
-    if 'thanks mark' in p_message:
+    if 'thanks mark' in p_message and not p_message.startswith('!'):
         return "That's okay, always happy to help out a mate!"
 
-    if 'joke' in p_message:
+    if 'joke' in p_message and not p_message.startswith('!'):
         joke = await myjokes.tell_joke()
         return f"Yeah, I know a joke actually:\n{joke}"
 
-    if 'legal advice' in p_message:
+    if 'legal advice' in p_message and not p_message.startswith('!'):
         return "Sorry, I'm not programmed to give legal advice. Please consult Maberse(Real)."
 
     if 'weather' in p_message:
@@ -62,16 +61,22 @@ async def handle_response(message) -> str | None:
         return f"It's currently {temperature} degrees in {place}, mate."
 
     if p_message.startswith("!play "):
-        query = p_message[6:].strip()
+        query = message.content.strip()[6:].strip()
         await join_and_play(message, query)
         return None  # Audio action, no text reply
 
     if p_message.startswith("!leave") or p_message.startswith("!stop"):
         voice_client = message.guild.voice_client
         if voice_client and voice_client.is_connected():
+            clear_queue(message.guild.id)
             await voice_client.disconnect()
             return "I'm off, you lads have a good night."
-    else:
-        return "I'm not connected to any voice channel."
+
+    if p_message.startswith("!skip"):
+        if skip_song(message.guild):
+            return "Sorry mate, let me skip that one."
+        else:
+            await voice_client.disconnect()
+            return "There's nothing playing to skip."
 
     return "Not sure about that one, sorry."
