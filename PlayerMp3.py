@@ -1,14 +1,24 @@
 # player.py
+import os
 import asyncio
 import discord
 from yt_dlp import YoutubeDL
 
+DOWNLOAD_DIR = 'downloads'
+os.makedirs(DOWNLOAD_DIR, exist_ok=True)
+
 YDL_OPTIONS = {
     'format': 'bestaudio[abr<=96]/bestaudio/best',
-    'noplaylist': 'True',
+    'noplaylist': True,
     'quiet': True,
     'default_search': 'ytsearch',
-    'extract_flat': False
+    'extract_flat': False,
+    'outtmpl': f'{DOWNLOAD_DIR}/%(id)s.%(ext)s',
+    'postprocessors': [{
+        'key': 'FFmpegExtractAudio',
+        'preferredcodec': 'mp3',
+        'preferredquality': '96',
+    }],
 }
 
 FFMPEG_OPTIONS = {
@@ -38,21 +48,25 @@ async def join_and_play(message, query):
             await message.channel.send("Failed to connect to the voice channel.")
             return
 
-    with YoutubeDL(YDL_OPTIONS) as ydl:
-        try:
+    try:
+        with YoutubeDL(YDL_OPTIONS) as ydl:
             info = ydl.extract_info(f"ytsearch:{query}", download=False)['entries'][0]
-            audio_url = info.get('url')
-            title = info.get('title')
-            if not audio_url:
-                raise ValueError("No audio URL extracted.")
-        except Exception as e:
-            await message.channel.send(f"Error retrieving video: {e}")
-            return
+            video_id = info['id']
+            title = info['title']
 
+            # Download and convert to mp3
+            info = ydl.extract_info(f"https://www.youtube.com/watch?v={video_id}", download=True)
+            file_path = os.path.splitext(info['_filename'])[0] + '.mp3'
+            if not os.path.exists(file_path):
+                raise FileNotFoundError(f"Audio file not found: {file_path}")
+
+    except Exception as e:
+        await message.channel.send(f"Error retrieving or processing video: {e}")
+        return
 
     queue = get_queue(guild_id)
     is_playing = vc.is_playing()
-    queue.append((title, audio_url))
+    queue.append((title, file_path))
 
     if is_playing:
         await message.channel.send(f"Queued: **{title}**")
@@ -72,19 +86,18 @@ async def play_next(guild, text_channel):
         return
 
     if not queue:
-        await asyncio.sleep(2)  # Grace period before disconnecting
+        await asyncio.sleep(2)
         if not get_queue(guild.id) and not vc.is_playing():
             await vc.disconnect()
         return
 
-    title, audio_url = queue.pop(0)
+    title, file_path = queue.pop(0)
     await text_channel.send(f"Now playing: **{title}**")
 
     def after_playing(err):
         if err:
             print(f"Playback error: {err}")
-            coro = text_channel.send(f"Playback error: {err}. Skipping...")
-            asyncio.run_coroutine_threadsafe(coro, main_loop)
+            asyncio.run_coroutine_threadsafe(text_channel.send(f"Playback error: {err}"), main_loop)
         try:
             future = asyncio.run_coroutine_threadsafe(
                 play_next(guild, text_channel), main_loop
@@ -93,8 +106,7 @@ async def play_next(guild, text_channel):
         except Exception as e:
             print(f"Error in after_playing: {e}")
 
-    vc.play(discord.FFmpegPCMAudio(audio_url, **
-            FFMPEG_OPTIONS), after=after_playing)
+    vc.play(discord.FFmpegPCMAudio(file_path, **FFMPEG_OPTIONS), after=after_playing)
 
 
 def clear_queue(guild_id):
@@ -104,7 +116,7 @@ def clear_queue(guild_id):
 async def skip_song(guild):
     vc: discord.VoiceClient = guild.voice_client
     if vc and vc.is_playing():
-        vc.stop()  # Triggers after_playing, which handles disconnection
+        vc.stop()  # Triggers after_playing
         return True
     elif vc and not vc.is_playing() and not get_queue(guild.id):
         await vc.disconnect()
