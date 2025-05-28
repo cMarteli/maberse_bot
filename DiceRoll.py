@@ -15,7 +15,7 @@ class DiceRoller:
         match = re.fullmatch(pattern, roll_string)
 
         if not match:
-            return "Invalid roll format. Use like `2*d6+3`, `d20-1`, or `3d10`."
+            return "Invalid roll format. Use like `2*d6+3`, `1d20-1`, or `3d10`."
 
         num_rolls = int(match.group(1)) if match.group(1) else 1
         sides = int(match.group(2))
@@ -33,4 +33,3 @@ class DiceRoller:
                 return f"{rolls_str} [sum: {total}]"
         except Exception as e:
             return f"Error rolling dice: {e}"
-
