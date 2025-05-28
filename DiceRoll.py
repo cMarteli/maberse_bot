@@ -3,23 +3,31 @@ import re
 
 
 class DiceRoller:
+    MAX_ROLLS = 100
+    MAX_SIDES = 100
+
     def __init__(self):
         pass
 
     def roll(self, roll_string: str) -> str:
-        # Remove whitespace
         roll_string = roll_string.replace(" ", "")
 
-        # Pattern to match formats like: 2*d6+4, 3d10-2, d20+1
-        pattern = r'(?:(\d+)\*?d)?(\d+)([+-]\d+)?$'
+        # Pattern: [optional number][optional *]d[sides][optional +|-modifier]
+        pattern = r'(\d*)\*?d(\d+)([+-]\d+)?$'
         match = re.fullmatch(pattern, roll_string)
 
         if not match:
-            return "Invalid roll format. Use like `2*d6+3`, `1d20-1`, or `3d10`."
+            return "Invalid roll format. Use formats like `2*d6+3`, `d20-1`, or `3d10`."
 
         num_rolls = int(match.group(1)) if match.group(1) else 1
         sides = int(match.group(2))
         modifier = int(match.group(3)) if match.group(3) else 0
+
+        if num_rolls > self.MAX_ROLLS:
+            return f"Too many dice rolls requested: {num_rolls}. Maximum allowed is {self.MAX_ROLLS}."
+
+        if sides > self.MAX_SIDES:
+            return f"Dice size too large: d{sides}. Maximum allowed is d{self.MAX_SIDES}."
 
         try:
             rolls = [random.randint(1, sides) for _ in range(num_rolls)]
