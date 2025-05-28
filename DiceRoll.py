@@ -1,4 +1,5 @@
 import random
+import re
 
 
 class DiceRoller:
@@ -6,29 +7,30 @@ class DiceRoller:
         pass
 
     def roll(self, roll_string: str) -> str:
-        # Default values
-        num_rolls = 1
-        sides = 6
+        # Remove whitespace
+        roll_string = roll_string.replace(" ", "")
 
-        if '*' in roll_string:
-            try:
-                num_rolls_str, dice_type = roll_string.split('*')
-                num_rolls = int(num_rolls_str.strip())
-            except ValueError:
-                return "Invalid roll format. Use format like `2*d10` or `d20`."
-        else:
-            dice_type = roll_string.strip()
+        # Pattern to match formats like: 2*d6+4, 3d10-2, d20+1
+        pattern = r'(?:(\d+)\*?d)?(\d+)([+-]\d+)?$'
+        match = re.fullmatch(pattern, roll_string)
 
-        # Detect sides from dice type
-        if 'd10' in dice_type:
-            sides = 10
-        elif 'd20' in dice_type:
-            sides = 20
-        elif 'd6' in dice_type or dice_type.startswith('d'):
-            sides = 6
+        if not match:
+            return "Invalid roll format. Use like `2*d6+3`, `d20-1`, or `3d10`."
+
+        num_rolls = int(match.group(1)) if match.group(1) else 1
+        sides = int(match.group(2))
+        modifier = int(match.group(3)) if match.group(3) else 0
 
         try:
-            rolls = [str(random.randint(1, sides)) for _ in range(num_rolls)]
-            return ', '.join(rolls)
+            rolls = [random.randint(1, sides) for _ in range(num_rolls)]
+            total = sum(rolls)
+            final_total = total + modifier
+
+            rolls_str = ', '.join(str(r) for r in rolls)
+            if modifier:
+                return f"{rolls_str} [sum: {total} {match.group(3)} = {final_total}]"
+            else:
+                return f"{rolls_str} [sum: {total}]"
         except Exception as e:
             return f"Error rolling dice: {e}"
+
