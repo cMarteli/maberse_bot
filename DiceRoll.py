@@ -32,7 +32,7 @@ class DiceRoller:
             rolls_str = '+'.join(str(r) for r in rolls)
 
             if assist:
-                points = [(2 if r <= 5 else 0) for r in rolls]
+                points = [(2 if r >= 5 else 0) for r in rolls]
                 total = sum(points)
                 breakdown = ' + '.join(str(p) for p in points)
                 return f"Assist Roll: {rolls_str}\nScored: {breakdown} = {total}"
