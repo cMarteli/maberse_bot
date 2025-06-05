@@ -23,9 +23,10 @@ async def handle_response(message) -> str | None:
                 "You can also `!play <YouTube search>` to play music in your voice channel."
             )
 
-        elif command in ('!roll', '!r'):
+        elif command in ('!roll', '!r', '!ra'):
             roll_string = p_message[len(command):].strip() or 'd6'
-            return roller.roll(roll_string)
+            is_assist = (command == '!ra')
+            return roller.roll(roll_string, assist=is_assist)
 
         elif command in ('!play', '!p'):
             query = content[6:].strip()  # Use original for casing
