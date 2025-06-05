@@ -34,10 +34,10 @@ class DiceRoller:
             total = sum(rolls)
             final_total = total + modifier
 
-            rolls_str = ', '.join(str(r) for r in rolls)
+            rolls_str = '+'.join(str(r) for r in rolls)
             if modifier:
-                return f"{rolls_str} [sum: {total} {match.group(3)} = {final_total}]"
+                return f"{rolls_str}\n[{total} {match.group(3)} = {final_total}]"
             else:
-                return f"{rolls_str} [sum: {total}]"
+                return f"{rolls_str}\n[{total}]"
         except Exception as e:
             return f"Error rolling dice: {e}"

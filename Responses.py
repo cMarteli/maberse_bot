@@ -23,23 +23,23 @@ async def handle_response(message) -> str | None:
                 "You can also `!play <YouTube search>` to play music in your voice channel."
             )
 
-        elif command == '!roll':
-            roll_string = p_message[len('!roll'):].strip() or 'd6'
+        elif command in ('!roll', '!r'):
+            roll_string = p_message[len(command):].strip() or 'd6'
             return roller.roll(roll_string)
 
-        elif command == '!play':
+        elif command in ('!play', '!p'):
             query = content[6:].strip()  # Use original for casing
             await join_and_play(message, query)
             return None
 
-        elif command in ('!leave', '!stop'):
+        elif command in ('!leave', '!l'):
             vc = message.guild.voice_client
             if vc and vc.is_connected():
                 clear_queue(message.guild.id)
                 await vc.disconnect()
                 return "I'm off, you lads have a good night."
 
-        elif command == '!skip':
+        elif command in ('!skip', '!s'):
             vc = message.guild.voice_client
             if await skip_song(message.guild):
                 return "Sorry mate, let me skip that one."
