@@ -8,6 +8,8 @@ import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 import Responses
+import asyncio
+from Player import get_queue  # Import this to check if queue is empty
 
 # --- Load Config ---
 load_dotenv()
@@ -19,15 +21,57 @@ WELCOME_MESSAGE = "Howdy, howdy!"
 intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
+intents.voice_states = True
+from soundmap import load_user_sounds
 
 bot = commands.Bot(command_prefix='!', intents=intents)
 
+user_sound_map = load_user_sounds()  # user_id: sound_filename
 
+# --- Voice Join Sound Trigger ---
+@bot.event
+async def on_voice_state_update(member, before, after):
+    if before.channel is None and after.channel is not None:
+        sound_filename = user_sound_map.get(member.id)
+        if not sound_filename:
+            return  # No sound assigned to this user
+
+        try:
+            channel = after.channel
+            vc = member.guild.voice_client
+
+            if not vc or not vc.is_connected():
+                vc = await channel.connect()
+            else:
+                await vc.move_to(channel)
+
+            if not vc.is_playing():
+                sound_path = os.path.join("sounds", sound_filename)
+                if not os.path.exists(sound_path):
+                    print(f"[WARN] Sound file not found: {sound_path}")
+                    return
+
+                audio_source = discord.FFmpegPCMAudio(sound_path)
+                vc.play(audio_source)
+
+                while vc.is_playing():
+                    await asyncio.sleep(1)
+
+                # Disconnect only if no queue exists
+                queue = get_queue(member.guild.id)
+                if not queue and not vc.is_playing():
+                    await vc.disconnect()
+
+        except Exception as e:
+            print(f"[ERROR] Failed to play sound for user {member.id}: {e}")
+
+
+# --- Bot Ready ---
 @bot.event
 async def on_ready():
     print(f"[INFO] {bot.user} is now running!")
 
-
+# --- Greet New Members ---
 @bot.event
 async def on_member_join(member):
     channel = bot.get_channel(GREET_CHANNEL_ID)
@@ -36,7 +80,7 @@ async def on_member_join(member):
     else:
         print("[WARN] Greet channel not found.")
 
-
+# --- Message Handling ---
 @bot.event
 async def on_message(message):
     if message.author == bot.user:
@@ -54,6 +98,7 @@ async def send_message(message: discord.Message):
     except Exception as e:
         print(f"[ERROR] Failed to process message: {e}")
 
+# --- Run Bot ---
 if __name__ == '__main__':
     try:
         bot.run(TOKEN)

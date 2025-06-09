@@ -1,0 +1,9 @@
+# user_id, sound file
+#glitch
+320898809641304064, vine_boom.mp3
+#marsh
+660824035361423386, shrek.mp3
+#farthing
+196905333359247360, phub.mp3
+#mark
+707476928139100240, bully.mp3
