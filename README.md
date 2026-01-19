@@ -27,8 +27,9 @@ pip install -r requirements.txt
 pip install -U yt-dlp
 pip install -U "discord.py[voice]"
 
-# Add your Discord bot token to a .env file:
+# Create a a.env file and add your Discord bot token and bot channel ID
 BOT_TOKEN=your_bot_token_here
+BOT_CHANNEL_ID=your_bot_channel_id_here
 
 # Then run:
 python3 main.py
