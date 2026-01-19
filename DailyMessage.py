@@ -24,8 +24,9 @@ async def send_daily_message(bot: discord.Client, channel_id: int):
 def start(bot: discord.Client, channel_id: int):
     scheduler = AsyncIOScheduler()
     scheduler.add_job(
-        lambda: send_daily_message(bot, channel_id),
-        CronTrigger(hour=14, minute=0, second=0)
+        send_daily_message,
+        CronTrigger(hour=0, minute=0, second=0),
+        args=[bot, channel_id]
     )
     scheduler.start()
     print("[INFO] Daily message scheduler started.")

@@ -33,7 +33,8 @@ class TestDailyMessage(unittest.TestCase):
         mock_channel.send.assert_called_with(expected_message)
 
     @patch('DailyMessage.AsyncIOScheduler')
-    def test_start_scheduler(self, mock_scheduler):
+    @patch('DailyMessage.CronTrigger')
+    def test_start_scheduler(self, mock_cron_trigger, mock_scheduler):
         # Arrange
         mock_bot = MagicMock()
         channel_id = 12345
@@ -43,7 +44,11 @@ class TestDailyMessage(unittest.TestCase):
 
         # Assert
         mock_scheduler.assert_called_with()
-        mock_scheduler.return_value.add_job.assert_called_once()
+        mock_scheduler.return_value.add_job.assert_called_once_with(
+            send_daily_message,
+            mock_cron_trigger.return_value,
+            args=[mock_bot, channel_id]
+        )
         mock_scheduler.return_value.start.assert_called_once()
 
 
