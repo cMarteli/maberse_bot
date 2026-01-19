@@ -23,4 +23,3 @@ yarl
 yt-dlp
 apscheduler
 ffmpeg-python
-pytz

@@ -3,7 +3,6 @@ from apscheduler.triggers.cron import CronTrigger
 import MyJokes
 import Weather
 import discord
-import pytz
 
 # --- Daily Message ---
 async def send_daily_message(bot: discord.Client, channel_id: int):
@@ -23,11 +22,11 @@ async def send_daily_message(bot: discord.Client, channel_id: int):
 
 # --- Scheduler Setup ---
 def start(bot: discord.Client, channel_id: int):
-    scheduler = AsyncIOScheduler(timezone=pytz.timezone('Australia/Perth'))
+    scheduler = AsyncIOScheduler()
     scheduler.add_job(
         lambda: send_daily_message(bot, channel_id),
-        CronTrigger(hour=6, minute=0, second=0)
+        CronTrigger(hour=14, minute=0, second=0)
     )
     scheduler.start()
-    print("[INFO] Daily message scheduler started for timezone Australia/Perth.")
+    print("[INFO] Daily message scheduler started.")
 

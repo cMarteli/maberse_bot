@@ -3,7 +3,6 @@ import unittest
 import asyncio
 from unittest.mock import AsyncMock, MagicMock, patch
 from DailyMessage import send_daily_message, start
-import pytz
 
 class TestDailyMessage(unittest.TestCase):
 
@@ -43,7 +42,7 @@ class TestDailyMessage(unittest.TestCase):
         start(mock_bot, channel_id)
 
         # Assert
-        mock_scheduler.assert_called_with(timezone=pytz.timezone('Australia/Perth'))
+        mock_scheduler.assert_called_with()
         mock_scheduler.return_value.add_job.assert_called_once()
         mock_scheduler.return_value.start.assert_called_once()
 
