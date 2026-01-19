@@ -2,7 +2,8 @@
 import unittest
 import asyncio
 from unittest.mock import AsyncMock, MagicMock, patch
-from DailyMessage import send_daily_message
+from DailyMessage import send_daily_message, start
+import pytz
 
 class TestDailyMessage(unittest.TestCase):
 
@@ -31,6 +32,21 @@ class TestDailyMessage(unittest.TestCase):
             "The current weather in Perth is 25°C."
         )
         mock_channel.send.assert_called_with(expected_message)
+
+    @patch('DailyMessage.AsyncIOScheduler')
+    def test_start_scheduler(self, mock_scheduler):
+        # Arrange
+        mock_bot = MagicMock()
+        channel_id = 12345
+        
+        # Act
+        start(mock_bot, channel_id)
+
+        # Assert
+        mock_scheduler.assert_called_with(timezone=pytz.timezone('Australia/Perth'))
+        mock_scheduler.return_value.add_job.assert_called_once()
+        mock_scheduler.return_value.start.assert_called_once()
+
 
 if __name__ == '__main__':
     unittest.main()
