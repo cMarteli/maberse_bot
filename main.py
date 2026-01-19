@@ -15,7 +15,7 @@ import DailyMessage
 # --- Load Config ---
 load_dotenv()
 TOKEN = os.getenv('BOT_TOKEN')
-GREET_CHANNEL_ID = 432542755785408515  # "generalis"
+BOT_CHANNEL_ID = 1088834811940053032  # "markanicus"
 WELCOME_MESSAGE = "Howdy, howdy!"
 
 # --- Bot Setup ---
@@ -71,12 +71,12 @@ async def on_voice_state_update(member, before, after):
 @bot.event
 async def on_ready():
     print(f"[INFO] {bot.user} is now running!")
-    DailyMessage.start(bot, GREET_CHANNEL_ID)
+    DailyMessage.start(bot, BOT_CHANNEL_ID)
 
 # --- Greet New Members ---
 @bot.event
 async def on_member_join(member):
-    channel = bot.get_channel(GREET_CHANNEL_ID)
+    channel = bot.get_channel(BOT_CHANNEL_ID)
     if channel:
         await channel.send(f"{WELCOME_MESSAGE} {member.mention}")
     else:
