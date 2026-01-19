@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 import Responses
 import asyncio
 from Player import get_queue  # Import this to check if queue is empty
+import DailyMessage
 
 # --- Load Config ---
 load_dotenv()
@@ -70,6 +71,7 @@ async def on_voice_state_update(member, before, after):
 @bot.event
 async def on_ready():
     print(f"[INFO] {bot.user} is now running!")
+    DailyMessage.start(bot, GREET_CHANNEL_ID)
 
 # --- Greet New Members ---
 @bot.event

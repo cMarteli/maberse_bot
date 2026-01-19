@@ -6,6 +6,16 @@ Maberse is a lightweight, Python-based Discord bot built for fun and utility —
 
 ---
 
+## ✨ Features
+
+- **🎲 Dice Rolling:** Advanced dice notation for all your TTRPG needs.
+- **🤣 Jokes:** Random jokes from the web.
+- **🌦️ Weather:** Get the current weather for a specified location.
+- **🎵 Music:** Play music from YouTube in your voice channel.
+- **☀️ Daily Message:** A daily message with a joke and the weather at 6 am.
+
+---
+
 ## 🚀 Quick Setup
 
 ```bash

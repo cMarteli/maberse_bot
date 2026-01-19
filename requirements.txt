@@ -21,3 +21,5 @@ typing_extensions
 urllib3
 yarl
 yt-dlp
+apscheduler
+ffmpeg-python
